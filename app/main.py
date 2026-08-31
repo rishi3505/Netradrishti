@@ -1,0 +1,27 @@
+from fastapi import FastAPI
+from app.core.config import settings
+from app.core.logging import setup_logging, get_logger
+from app.api.routes import health, events
+
+# Initialize logging
+setup_logging()
+logger = get_logger(__name__)
+
+app = FastAPI(
+    title=settings.PROJECT_NAME,
+    description="Netradhrishti - Intelligent Security Correlation and Attack Analysis Platform",
+    version="1.0.0",
+    openapi_url=f"{settings.API_V1_STR}/openapi.json"
+)
+
+# Include routers
+app.include_router(health.router, tags=["Health"])
+app.include_router(events.router, prefix=settings.API_V1_STR, tags=["Events"])
+
+@app.on_event("startup")
+async def startup_event():
+    logger.info("Starting up Netradhrishti Backend")
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    logger.info("Shutting down Netradhrishti Backend")
