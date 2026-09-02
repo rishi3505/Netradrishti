@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 from app.core.config import settings
 from app.core.logging import setup_logging, get_logger
-from app.api.routes import health, events
+from app.api.routes import health, events, ingestion, sources
+from app.connectors.manager import connector_manager
 
 # Initialize logging
 setup_logging()
@@ -17,10 +18,13 @@ app = FastAPI(
 # Include routers
 app.include_router(health.router, tags=["Health"])
 app.include_router(events.router, prefix=settings.API_V1_STR, tags=["Events"])
+app.include_router(ingestion.router, prefix=f"{settings.API_V1_STR}/ingestion", tags=["Ingestion"])
+app.include_router(sources.router, prefix=f"{settings.API_V1_STR}/sources", tags=["Sources"])
 
 @app.on_event("startup")
 async def startup_event():
     logger.info("Starting up Netradhrishti Backend")
+    connector_manager.initialize_connectors()
 
 @app.on_event("shutdown")
 async def shutdown_event():
