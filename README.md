@@ -2,11 +2,15 @@
 
 Netradhrishti is an Intelligent Security Correlation, Threat Intelligence, Attack Analysis, and Incident Response Guidance Platform.
 
-## Features (Module 1)
-- FastAPI Backend
-- PostgreSQL Integration
-- Unified Security Event Schema
-- Event Ingestion API
+## Features (Module 1 & 2)
+- FastAPI Backend & PostgreSQL Integration
+- Unified Security Event Schema & Event Ingestion API
+- **Module 2: Data Ingestion & Connector Framework**
+  - Plug-in style connector framework (Windows, Firewall, Suricata, SurakshaNetra)
+  - Single and Batch event ingestion APIs (`/api/v1/ingestion/events`)
+  - Dynamic Connector Registry and source validation
+  - In-flight raw event transformation and evidence preservation
+
 
 ## Setup
 
