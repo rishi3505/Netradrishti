@@ -21,6 +21,11 @@ app.include_router(events.router, prefix=settings.API_V1_STR, tags=["Events"])
 app.include_router(ingestion.router, prefix=f"{settings.API_V1_STR}/ingestion", tags=["Ingestion"])
 app.include_router(sources.router, prefix=f"{settings.API_V1_STR}/sources", tags=["Sources"])
 
+# Import Module 4 routers here to avoid circular imports during app init if any
+from app.api.routes import detection, signals
+app.include_router(detection.router, prefix=f"{settings.API_V1_STR}", tags=["Detection"])
+app.include_router(signals.router, prefix=f"{settings.API_V1_STR}", tags=["Signals"])
+
 @app.on_event("startup")
 async def startup_event():
     logger.info("Starting up Netradhrishti Backend")

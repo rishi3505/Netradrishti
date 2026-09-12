@@ -26,6 +26,10 @@ class PipelineService:
         # 3. Storage (Handled by EventService later, but we mark the state here)
         # Event is returned to the caller to be stored via EventService
         
+        # NOTE: Detection is currently run asynchronously or sequentially after NormalizationPipeline.
+        # It takes a NormalizedEvent, not a UnifiedSecurityEvent.
+        # This service's process_event is currently only for the ingestion pipeline up to ENRICHED.
+        
         event.lifecycle = EventLifecycle.STORED
         return event
 
