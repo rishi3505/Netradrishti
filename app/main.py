@@ -21,10 +21,12 @@ app.include_router(events.router, prefix=settings.API_V1_STR, tags=["Events"])
 app.include_router(ingestion.router, prefix=f"{settings.API_V1_STR}/ingestion", tags=["Ingestion"])
 app.include_router(sources.router, prefix=f"{settings.API_V1_STR}/sources", tags=["Sources"])
 
-# Import Module 4 routers here to avoid circular imports during app init if any
-from app.api.routes import detection, signals
+# Import Module 4 & 5 routers here to avoid circular imports during app init if any
+from app.api.routes import detection, signals, correlation, incidents
 app.include_router(detection.router, prefix=f"{settings.API_V1_STR}", tags=["Detection"])
 app.include_router(signals.router, prefix=f"{settings.API_V1_STR}", tags=["Signals"])
+app.include_router(correlation.router, prefix=f"{settings.API_V1_STR}", tags=["Correlation"])
+app.include_router(incidents.router, prefix=f"{settings.API_V1_STR}", tags=["Incidents"])
 
 @app.on_event("startup")
 async def startup_event():
