@@ -38,6 +38,11 @@ class DetectionService:
                     # Create new signal
                     logger.info("Creating new signal", rule_id=signal.detection_rule_id)
                     await signal_service.create_signal(db, signal)
+                    
+                # 3. Trigger Correlation Engine (Module 5)
+                from app.services.correlation_service import correlation_service
+                await correlation_service.process_correlation(db, signal)
+                
             except Exception as e:
                 logger.error("Failed to process signal", error=str(e), rule_id=signal.detection_rule_id)
 
