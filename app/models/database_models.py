@@ -47,3 +47,25 @@ class DBEntity(Base):
     first_seen = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     last_seen = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     entity_data = Column(JSONB, nullable=False)
+
+class DBThreatIntelligence(Base):
+    __tablename__ = "threat_intelligence"
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    indicator = Column(String, index=True, nullable=False)
+    normalized_indicator = Column(String, index=True, nullable=False)
+    indicator_type = Column(String, index=True, nullable=False)
+    verdict = Column(String, index=True, nullable=False)
+    confidence = Column(JSONB, nullable=False) # store integer or complex object
+    provider = Column(String, index=True, nullable=False)
+    checked_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    intelligence_data = Column(JSONB, nullable=False)
+
+class DBIncidentIntelligence(Base):
+    __tablename__ = "incident_intelligence"
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    incident_id = Column(UUID(as_uuid=True), index=True, nullable=False)
+    threat_intel_id = Column(UUID(as_uuid=True), index=True, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+
