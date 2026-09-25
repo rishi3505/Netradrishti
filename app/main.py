@@ -29,6 +29,10 @@ app.include_router(correlation.router, prefix=f"{settings.API_V1_STR}", tags=["C
 app.include_router(incidents.router, prefix=f"{settings.API_V1_STR}", tags=["Incidents"])
 app.include_router(threat_intelligence.router, prefix=f"{settings.API_V1_STR}", tags=["Threat Intelligence"])
 
+from app.api.v1 import attack_risk, ai_analysis
+app.include_router(attack_risk.router, prefix=f"{settings.API_V1_STR}/incidents", tags=["Attack Graph & Risk"])
+app.include_router(ai_analysis.router, prefix=f"{settings.API_V1_STR}/ai", tags=["AI Analysis"])
+
 @app.on_event("startup")
 async def startup_event():
     logger.info("Starting up Netradhrishti Backend")
