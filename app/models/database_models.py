@@ -69,3 +69,45 @@ class DBIncidentIntelligence(Base):
     threat_intel_id = Column(UUID(as_uuid=True), index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
 
+class DBAttackGraphNode(Base):
+    __tablename__ = "attack_graph_nodes"
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    node_id = Column(String, index=True, nullable=False, unique=True)
+    node_type = Column(String, index=True, nullable=False)
+    timestamp = Column(DateTime(timezone=True), index=True, nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    node_data = Column(JSONB, nullable=False)
+
+class DBAttackGraphEdge(Base):
+    __tablename__ = "attack_graph_edges"
+    
+    edge_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    source_node = Column(String, index=True, nullable=False)
+    destination_node = Column(String, index=True, nullable=False)
+    relationship_type = Column(String, index=True, nullable=False)
+    timestamp = Column(DateTime(timezone=True), index=True, nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    edge_data = Column(JSONB, nullable=False)
+
+class DBRiskAssessment(Base):
+    __tablename__ = "risk_assessments"
+    
+    assessment_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    incident_id = Column(String, index=True, nullable=False)
+    risk_score = Column(String, index=True, nullable=False)
+    risk_level = Column(String, index=True, nullable=False)
+    calculated_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    assessment_data = Column(JSONB, nullable=False)
+
+class DBAIAnalysis(Base):
+    __tablename__ = "ai_analyses"
+    
+    analysis_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    incident_id = Column(String, index=True, nullable=False)
+    context_hash = Column(String, index=True, nullable=False)
+    provider = Column(String, nullable=False)
+    status = Column(String, index=True, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    analysis_data = Column(JSONB, nullable=False)
+
