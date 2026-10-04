@@ -9,15 +9,9 @@ from app.services.attack_risk.risk.engine import RiskEngine
 from app.services.attack_risk.graph.builder import AttackGraphBuilder
 from app.schemas.attack_graph import RiskAssessment, AttackGraphNode, AttackGraphEdge, AttackPath
 
-# Assuming some get_db dependency exists. We will mock import it or define it.
-# Usually it's in app.core.database or app.api.deps. For now, assuming a generic dependency.
-# from app.api.deps import get_db
-
 router = APIRouter()
 
-# Stub for db dependency (will need to align with actual project structure)
-async def get_db():
-    pass # Replace with actual dependency
+from app.api.dependencies import get_db
 
 @router.get("/{incident_id}/attack-graph", response_model=dict)
 async def get_attack_graph(incident_id: str, db: AsyncSession = Depends(get_db)):

@@ -20,8 +20,7 @@ def get_ai_config() -> AIProviderConfig:
         external_transmission_enabled=False
     )
 
-async def get_db():
-    pass
+from app.api.dependencies import get_db
 
 @router.post("/{incident_id}/ai-analysis", response_model=AIAnalysisRecord)
 async def analyze_incident(
