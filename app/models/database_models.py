@@ -138,3 +138,24 @@ class DBResponseAction(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
     action_data = Column(JSONB, nullable=False)
+
+class DBAuditLog(Base):
+    __tablename__ = "audit_logs"
+
+    log_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    actor = Column(String, index=True, nullable=False)
+    action = Column(String, index=True, nullable=False)
+    object_id = Column(String, index=True, nullable=True)
+    previous_state = Column(JSONB, nullable=True)
+    new_state = Column(JSONB, nullable=True)
+    request_id = Column(String, index=True, nullable=True)
+    timestamp = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+
+class DBUser(Base):
+    __tablename__ = "users"
+
+    user_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    username = Column(String, unique=True, index=True, nullable=False)
+    role = Column(String, nullable=False)
+    is_active = Column(String, default="true")
+
