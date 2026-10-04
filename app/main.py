@@ -29,10 +29,14 @@ app.include_router(correlation.router, prefix=f"{settings.API_V1_STR}", tags=["C
 app.include_router(incidents.router, prefix=f"{settings.API_V1_STR}", tags=["Incidents"])
 app.include_router(threat_intelligence.router, prefix=f"{settings.API_V1_STR}", tags=["Threat Intelligence"])
 
-from app.api.v1 import attack_risk, ai_analysis, response_api
+from app.api.v1 import attack_risk, ai_analysis, response_api, dashboard_api, search_api, health_api, audit_api
 app.include_router(attack_risk.router, prefix=f"{settings.API_V1_STR}/incidents", tags=["Attack Graph & Risk"])
 app.include_router(ai_analysis.router, prefix=f"{settings.API_V1_STR}/ai", tags=["AI Analysis"])
 app.include_router(response_api.router, tags=["Response"])
+app.include_router(dashboard_api.router, tags=["Dashboard"])
+app.include_router(search_api.router, tags=["Search and Entities"])
+app.include_router(health_api.router, tags=["Health"])
+app.include_router(audit_api.router, tags=["Audit Logs"])
 
 @app.on_event("startup")
 async def startup_event():

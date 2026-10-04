@@ -1,32 +1,120 @@
-# Netradhrishti
+# Netradhrishti - Intelligent SOC Platform
 
-Netradhrishti is an Intelligent Security Correlation, Threat Intelligence, Attack Analysis, and Incident Response Guidance Platform.
+Netradhrishti is a comprehensive, end-to-end Security Operations Center (SOC) platform designed to transform raw security telemetry into actionable, contextualized intelligence. It automates the heavy lifting of log analysis, correlation, risk assessment, and response orchestration, allowing security analysts to focus on making critical decisions.
 
-## Features (Module 1 & 2)
-- FastAPI Backend & PostgreSQL Integration
-- Unified Security Event Schema & Event Ingestion API
-- **Module 2: Data Ingestion & Connector Framework**
-  - Plug-in style connector framework (Windows, Firewall, Suricata, SurakshaNetra)
-  - Single and Batch event ingestion APIs (`/api/v1/ingestion/events`)
-  - Dynamic Connector Registry and source validation
-  - In-flight raw event transformation and evidence preservation
+## 🚀 Features & Architecture
 
+Netradhrishti is built around a 10-stage pipeline (Modules 1-10):
 
-## Setup
+1. **Unified Event Schema:** A standardized format for all incoming security data.
+2. **Data Ingestion:** A robust connector framework for gathering logs (including SurakshaNetra).
+3. **Normalization & Entity Resolution:** Standardizing raw logs and mapping them to specific users, hosts, and IPs.
+4. **Suspicious Activity Detection:** Rule-based and behavioral detection engine.
+5. **Event Correlation:** Linking isolated signals into coherent security **Incidents**.
+6. **Threat Intelligence Engine:** Enriching IOCs with external verdicts and confidence scores.
+7. **Attack Graph & Risk Engine:** Visualizing attack paths and dynamically scoring incident risk (0-100).
+8. **AI Incident Analysis:** Advisory AI for summarizing attacks and suggesting investigation questions.
+9. **Response & Mitigation Engine:** Playbook-driven, safe response orchestration with explicit approval workflows.
+10. **SOC Platform Integration:** A unified API, Dashboard overview, and global investigation search.
 
-1. **Environment Configuration**
-   Copy `.env.example` to `.env`.
+---
 
-2. **Docker Compose (Recommended)**
+## 🛠️ Prerequisites
+
+- **Python 3.10+** (if running locally)
+- **Docker & Docker Compose** (recommended for production/easy setup)
+- **PostgreSQL** (if not using Docker/SQLite)
+
+---
+
+## ⚙️ Installation & Quick Start
+
+### Option 1: Docker (Recommended)
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/rishi3505/Netradrishti.git
+   cd Netradrishti
+   ```
+2. Copy the environment variables:
+   ```bash
+   cp .env.example .env
+   ```
+3. Start the platform:
    ```bash
    docker-compose up --build
    ```
+4. Access the API documentation at: `http://localhost:8000/docs`
 
-3. **Running locally (Without Docker)**
+### Option 2: Local Development
+1. Create a virtual environment and install dependencies:
    ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
    pip install -r requirements.txt
+   ```
+2. Set up your `.env` file (see `.env.example`).
+3. Run the FastAPI server:
+   ```bash
    uvicorn app.main:app --reload
    ```
 
-## API Documentation
-Once running, visit `http://localhost:8000/docs` to see the interactive OpenAPI documentation.
+---
+
+## 🧪 Demo Mode (End-to-End Scenario)
+
+To safely test the platform without connecting live log sources, you can run the deterministic synthetic demo. This will simulate a complete attack lifecycle (Authentication failures → Successful login → PowerShell execution → Outbound connection → Malicious IOC).
+
+Run the seed script:
+```bash
+python -m app.demo.seed
+```
+
+This will generate a `CRITICAL` incident, complete with Threat Intelligence enrichment, AI analysis, and a proposed Response Plan.
+
+---
+
+## 🕵️‍♂️ How to Use the Platform (Analyst Workflow)
+
+As a SOC Analyst, your workflow in Netradhrishti centers around **Incidents**:
+
+1. **Dashboard Overview:** Check the `/api/v1/dashboard/overview` endpoint to see system health, active high-risk incidents, and total events.
+2. **Search & Investigate:** Use `/api/v1/search?q=<term>` to find specific IPs, Hostnames, or Incident IDs.
+3. **Analyze the Incident:**
+   - Retrieve incident details: `GET /api/v1/incidents/{incident_id}`
+   - View the mapped attack paths and risk: `GET /api/v1/incidents/{incident_id}/attack-risk`
+   - Read the AI-assisted analysis: `GET /api/v1/ai/{incident_id}/analysis`
+4. **Take Action (Response):**
+   - View proposed playbooks: `GET /api/v1/incidents/{incident_id}/response-actions`
+   - High-impact actions (e.g., `isolate_host`) will be in a `PROPOSED` state.
+   - Approve the action: `POST /api/v1/response-actions/{action_id}/approve`
+   - Simulate/Execute the action: `POST /api/v1/response-actions/{action_id}/simulate`
+
+### Authorization Roles
+- **ANALYST:** Can view incidents, investigate entities, and view response plans.
+- **RESPONDER:** Can do everything an analyst can, plus **approve** eligible response actions.
+- **ADMIN:** Can view audit logs (`/api/v1/audit`), configure the system, and manage connectors.
+
+---
+
+## 🔒 Security & Safe Execution
+
+Netradhrishti is designed with safety first. **High-impact actions** (like host isolation, credential revocation, or process termination) will **never** execute automatically. 
+- They are generated as `approval_required = True`.
+- They must be explicitly approved by a user with the `RESPONDER` or `ADMIN` role.
+- Currently, execution is routed through a `mock_connector` to ensure no destructive actions occur during initial deployment.
+
+---
+
+## 📖 API Documentation
+
+Once the server is running, interactive API documentation is automatically generated by FastAPI (Swagger UI).
+- **Swagger UI:** http://localhost:8000/docs
+- **ReDoc:** http://localhost:8000/redoc
+
+## 🧪 Testing
+
+Run the deterministic test suite:
+```bash
+export PYTHONPATH="."
+pytest tests/
+```
