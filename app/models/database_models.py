@@ -111,3 +111,30 @@ class DBAIAnalysis(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     analysis_data = Column(JSONB, nullable=False)
 
+class DBResponsePlan(Base):
+    __tablename__ = "response_plans"
+    
+    plan_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    incident_id = Column(String, index=True, nullable=False)
+    status = Column(String, index=True, nullable=False)
+    priority = Column(String, index=True, nullable=True)
+    approval_required = Column(String, nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
+    plan_data = Column(JSONB, nullable=False)
+
+class DBResponseAction(Base):
+    __tablename__ = "response_actions"
+    
+    action_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    plan_id = Column(UUID(as_uuid=True), index=True, nullable=False)
+    incident_id = Column(String, index=True, nullable=False)
+    action_type = Column(String, index=True, nullable=False)
+    category = Column(String, index=True, nullable=False)
+    status = Column(String, index=True, nullable=False)
+    priority = Column(String, index=True, nullable=False)
+    risk = Column(String, index=True, nullable=False)
+    approval_required = Column(String, nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
+    action_data = Column(JSONB, nullable=False)
